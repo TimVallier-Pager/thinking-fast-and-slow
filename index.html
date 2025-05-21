@@ -762,6 +762,8 @@
             
             function populateConcepts() {
                 if (!conceptsContainer) return;
+                conceptsContainer.innerHTML = ''; // Clear any existing content
+
                 concepts.forEach((concept, index) => {
                     const section = document.createElement('div');
                     section.classList.add('concept-section');
