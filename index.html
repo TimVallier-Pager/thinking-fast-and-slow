@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thinking, Fast and Slow - Part 1 Insights</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* --- Cyberpunk/Modern Art --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --color-background: #080a0f; /* Very dark blue/black */
+            --color-text: #d0d8e8; /* Light greyish blue */
+            --color-primary: #00f6ff; /* Neon Cyan */
+            --color-secondary: #ff00ff; /* Neon Magenta */
+            --color-accent: #f8f840; /* Bright Yellow */
+            --font-heading: "Orbitron", sans-serif;
+            --font-body: "Share Tech Mono", monospace;
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes backgroundShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            font-family: var(--font-body);
+            line-height: 1.7;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            padding: 20px;
+            /* Layered Background */
+            background-image:
+                /* Subtle grid overlay */
+                linear-gradient(rgba(0, 246, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 246, 255, 0.03) 1px, transparent 1px),
+                /* Faint diagonal lines */
+                linear-gradient(45deg, rgba(255, 0, 255, 0.02) 25%, transparent 25%, transparent 75%, rgba(255, 0, 255, 0.02) 75%),
+                linear-gradient(-45deg, rgba(255, 0, 255, 0.02) 25%, transparent 25%, transparent 75%, rgba(255, 0, 255, 0.02) 75%),
+                /* Base Dark Color */
+                linear-gradient(var(--color-background), var(--color-background));
+            background-size: 50px 50px, 50px 50px, 40px 40px, 40px 40px, auto;
+            background-attachment: fixed; /* Creates parallax effect */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background-color: rgba(15, 20, 30, 0.85); /* Dark semi-transparent */
+            padding: 30px 40px;
+            border-radius: 0px; /* Sharp edges */
+            border: 1px solid var(--color-primary);
+            box-shadow: 0 0 25px rgba(0, 246, 255, 0.2), inset 0 0 15px rgba(0, 246, 255, 0.1);
+            position: relative; /* Needed for potential pseudo-elements */
+        }
+
+        /* --- Typography --- */
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin-bottom: 0.8em;
+            line-height: 1.3;
+            text-shadow: 0 0 5px var(--color-primary), 0 0 10px rgba(0, 246, 255, 0.5);
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            text-align: center;
+            margin-bottom: 1em;
+            border-bottom: 2px solid var(--color-secondary);
+            padding-bottom: 0.5em;
+            color: var(--color-accent);
+            text-shadow: 0 0 8px var(--color-accent), 0 0 15px rgba(248, 248, 64, 0.6);
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 1.9em;
+            color: var(--color-primary);
+            margin-top: 1.8em;
+            padding-bottom: 0.3em;
+            border-bottom: 1px dashed rgba(0, 246, 255, 0.4);
+        }
+
+        h3 {
+            font-size: 1.4em;
+            color: var(--color-secondary);
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            text-shadow: 0 0 4px var(--color-secondary), 0 0 8px rgba(255, 0, 255, 0.4);
+        }
+
+        p {
+            margin-bottom: 1.2em;
+            font-size: 1.05em;
+        }
+
+        ul {
+            list-style: none; /* Keep default list style off */
+            padding-left: 0;
+        }
+
+        /* Default list items (outside takeaways) - not currently used but for consistency */
+        li {
+            background-color: transparent; /* Override old style */
+            margin-bottom: 0.8em;
+            padding: 10px 0;
+            border-left: none; /* Override old style */
+        }
+
+        strong {
+            color: var(--color-accent);
+            font-weight: normal; /* Monospace fonts often look bold anyway */
+            text-shadow: 0 0 3px var(--color-accent);
+        }
+
+        em {
+            color: var(--color-secondary);
+            font-style: normal;
+        }
+
+        hr {
+            border: none;
+            height: 2px;
+            background-image: linear-gradient(to right, transparent, var(--color-secondary), transparent);
+            margin: 3em 0;
+            opacity: 0.6;
+        }
+
+        /* --- Accordion & Interactive Styling --- */
+        .concept-section {
+            margin-bottom: 2em;
+            padding: 25px;
+            border: 1px solid rgba(0, 246, 255, 0.3);
+            border-radius: 0;
+            background-color: rgba(20, 30, 45, 0.7); /* Slightly different transparency */
+            cursor: pointer;
+            transition: background-color 0.4s ease, border-color 0.4s ease;
+            overflow: hidden; /* Prevent content spill during animation */
+        }
+
+        .concept-section:hover {
+             background-color: rgba(30, 45, 65, 0.8);
+             border-color: var(--color-primary);
+        }
+
+        .concept-section h2 {
+            margin-top: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.7em; /* Slightly smaller */
+            transition: color 0.3s ease;
+        }
+        .concept-section:hover h2 {
+            color: var(--color-accent);
+            text-shadow: 0 0 5px var(--color-accent), 0 0 10px rgba(248, 248, 64, 0.5);
+        }
+
+        .concept-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), margin-top 0.5s cubic-bezier(0.25, 0.1, 0.25, 1); /* Smoother ease */
+            margin-top: 0;
+            opacity: 0;
+        }
+
+        .concept-section.active .concept-content {
+            max-height: 1000px; /* Adjust if needed */
+            margin-top: 1.5em;
+            opacity: 1;
+            transition: max-height 0.7s cubic-bezier(0.5, 0, 0.5, 1), margin-top 0.7s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.5s ease-in 0.2s; /* Delay opacity */
+        }
+
+        /* Arrow for accordion */
+        .arrow {
+            font-size: 1.3em;
+            color: var(--color-secondary);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), color 0.3s ease; /* Bouncy transition */
+            text-shadow: 0 0 5px var(--color-secondary);
+        }
+
+        .concept-section:hover .arrow {
+             color: var(--color-accent);
+             text-shadow: 0 0 5px var(--color-accent);
+        }
+
+        .concept-section.active .arrow {
+            transform: rotate(90deg);
+        }
+
+        /* Takeaways Button & Section */
+        .reveal-takeaways-btn {
+            display: inline-block;
+            background-color: transparent;
+            color: var(--color-primary);
+            padding: 10px 20px;
+            border: 1px solid var(--color-primary);
+            border-radius: 0;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 1em;
+            margin-top: 1.5em;
+            margin-bottom: 1em;
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+            box-shadow: inset 0 0 0px var(--color-primary);
+        }
+
+        .reveal-takeaways-btn:hover {
+            background-color: var(--color-primary);
+            color: var(--color-background);
+            transform: scale(1.03);
+            box-shadow: 0 0 15px var(--color-primary);
+            text-shadow: none;
+        }
+
+        .takeaways-section {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.6s ease-out, opacity 0.5s ease-out, margin-top 0.6s ease-out;
+            margin-top: 0;
+        }
+
+        .takeaways-section.visible {
+            max-height: 500px; /* Adjust if takeaways list is very long */
+            opacity: 1;
+            margin-top: 1em;
+            transition: max-height 0.8s ease-in, opacity 0.7s ease-in 0.1s, margin-top 0.8s ease-in;
+        }
+
+        .takeaways-section h3 {
+            margin-top: 0; /* Reset margin for h3 inside */
+            margin-bottom: 0.8em;
+            border-bottom: 1px dotted rgba(255, 0, 255, 0.5);
+            padding-bottom: 0.3em;
+        }
+
+        /* Animate List Items Inside Takeaways */
+        .takeaways-section ul li {
+            opacity: 0;
+            transform: translateX(-25px) skewX(-10deg); /* Add skew for effect */
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            background-color: transparent;
+            border-left: none;
+            padding: 5px 0; /* Adjust padding */
+            margin-bottom: 0.5em;
+            color: var(--color-text);
+        }
+
+        /* Add a pseudo-element marker */
+        .takeaways-section ul li::before {
+            content: '>>';
+            display: inline-block;
+            margin-right: 10px;
+            color: var(--color-primary);
+            opacity: 0;
+            transition: opacity 0.5s ease-out 0.2s; /* Delay marker appearance */
+        }
+
+        .takeaways-section.visible ul li.item-visible {
+            opacity: 1;
+            transform: translateX(0) skewX(0deg);
+        }
+
+        .takeaways-section.visible ul li.item-visible::before {
+             opacity: 1;
+        }
+
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 4em;
+            padding-top: 1.5em;
+            border-top: 1px solid rgba(0, 246, 255, 0.2);
+            font-size: 0.95em;
+            color: rgba(208, 216, 232, 0.7); /* Slightly dimmed text */
+            letter-spacing: 1px;
+        }
+
+        /* --- General Animations --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Apply fade-in to container elements, slightly adjusted */
+        .container > *:not(#concepts-container):not(h1):not(hr),
+        .concept-section, /* these are children of #concepts-container */
+        .quote-category-section { /* these are children of #quotes-gallery */
+            animation: fadeIn 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+            opacity: 0; /* Start hidden */
+        }
+
+        /* Stagger animation (keep existing logic, adjust timing if needed) */
+        .container > section,
+        .container > p,
+        .container > hr,
+        .container > #final-thoughts,
+        .container > footer {
+             animation-delay: calc(0.15s * var(--animation-order, 1));
+        }
+
+        /* Ensure container itself fades in maybe? */
+        .container {
+             animation: fadeIn 0.6s ease-out;
+        }
+
+        /* --- Quotes Gallery Specific Styles --- */
+        #quotes-gallery h2 {
+            text-align: center;
+            color: var(--color-accent);
+            font-size: 2.2em;
+            margin-bottom: 1.5em;
+            border-bottom: 1px solid var(--color-secondary);
+            padding-bottom: 0.5em;
+            text-shadow: 0 0 8px var(--color-accent), 0 0 15px rgba(248, 248, 64, 0.6);
+        }
+
+        .quote-category-section {
+            margin-bottom: 1.5em;
+            border: 1px solid rgba(255, 0, 255, 0.3); /* Magenta border */
+            background-color: rgba(25, 15, 30, 0.75); /* Dark magenta-tinted bg */
+            padding: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .quote-category-section:hover {
+            background-color: rgba(35, 25, 45, 0.85);
+            border-color: var(--color-secondary);
+        }
+
+        .quote-category-section h3 {
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+            text-shadow: 0 0 4px var(--color-secondary);
+            font-size: 1.5em;
+            margin: 0;
+            padding-bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: none;
+        }
+
+        .quote-category-section:hover h3 {
+            color: var(--color-accent);
+            text-shadow: 0 0 5px var(--color-accent);
+        }
+
+        .quote-category-section .arrow {
+             color: var(--color-primary); /* Cyan arrow */
+        }
+        .quote-category-section:hover .arrow {
+            color: var(--color-accent);
+        }
+
+        .quote-category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), margin-top 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            margin-top: 0;
+            opacity: 0;
+        }
+
+        .quote-category-section.active .quote-category-content {
+            max-height: 2000px; /* Generous height for multiple quotes */
+            margin-top: 1em;
+            opacity: 1;
+            transition: max-height 0.7s cubic-bezier(0.5, 0, 0.5, 1), margin-top 0.7s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.5s ease-in 0.2s;
+        }
+
+        .quote-item-container {
+            margin-bottom: 1em;
+            padding: 10px;
+            border: 1px dashed rgba(0, 246, 255, 0.2);
+            background-color: rgba(8, 10, 15, 0.5);
+            transition: transform 0.2s ease-out;
+        }
+
+        .reveal-quote-btn {
+            display: block; /* Make it full width for easier clicking */
+            width: 100%;
+            background-color: transparent;
+            color: var(--color-primary);
+            padding: 8px 12px;
+            border: 1px solid var(--color-primary);
+            font-family: var(--font-body);
+            font-size: 0.95em;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, letter-spacing 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .reveal-quote-btn:hover {
+            background-color: var(--color-primary);
+            color: var(--color-background);
+            letter-spacing: 2px;
+            text-shadow: none;
+        }
+
+        .reveal-quote-btn .quote-arrow {
+            float: right;
+            transform: rotate(0deg);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .reveal-quote-btn.open .quote-arrow {
+            transform: rotate(90deg);
+        }
+
+        .quote-text-content {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.5s ease-out, opacity 0.4s ease-out, margin-top 0.5s ease-out, padding-top 0.5s ease-out;
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .quote-text-content.visible {
+            max-height: 500px; /* Adjust if quotes are very long */
+            opacity: 1;
+            margin-top: 0.8em;
+            padding-top: 0.8em;
+            border-top: 1px dotted rgba(0, 246, 255, 0.3);
+        }
+
+        .quote-text-content blockquote {
+            margin: 0;
+            padding: 0.5em 0;
+            font-style: italic;
+            color: var(--color-text);
+            text-shadow: 0 0 2px rgba(208, 216, 232, 0.5);
+        }
+
+        .quote-text-content blockquote::before,
+        .quote-text-content blockquote::after {
+            content: '"';
+            color: var(--color-accent);
+            font-size: 1.2em;
+            margin: 0 2px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Content will be added here -->
+        <h1 style="--animation-order: 0;">Thinking, Fast and Slow – Part 1 Summary: Two Systems</h1>
+
+        <p style="--animation-order: 1;">Part 1 of Daniel Kahneman's <em>Thinking, Fast and Slow</em> introduces two fundamentally different modes of thought in our minds – one fast and intuitive, the other slow and deliberate. Each chapter explores how these "Systems" shape our judgments and decisions.</p>
+
+        <p style="--animation-order: 2;">Below is a concise summary of each key concept from Part 1, followed by leadership takeaways to help managers and executives apply these insights for better decision-making and team leadership. Click on each concept to explore.</p>
+
+        <hr style="--animation-order: 3;">
+
+        <!-- Concepts Sections will be populated here -->
+        <section id="concepts-container" style="--animation-order: 4;">
+            <!-- Content generated by JS -->
+        </section>
+
+        <hr style="--animation-order: 5;">
+
+        <section id="quotes-gallery" style="--animation-order: 6;">
+            <!-- Quotes will be dynamically injected here by JavaScript -->
+        </section>
+
+        <hr style="--animation-order: 7;">
+
+        <section id="final-thoughts" style="--animation-order: 8;">
+             <h2>Final Thoughts</h2>
+             <p>Part 1 of <em>Thinking, Fast and Slow</em> gives leaders a clear framework for recognizing how their minds work. By understanding when fast thinking and slow thinking are at play, leaders can improve decision quality, minimize bias, and lead teams more thoughtfully and effectively.</p>
+        </section>
+
+        <footer style="--animation-order: 9;">
+            Created by Tim Vallier. Material gathered from Daniel Kahneman's work.
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const conceptsContainer = document.getElementById('concepts-container');
+            // Removing the placeholder data variable, as it's unused.
+            // const researchData = `{{RESEARCH_MD_CONTENT}}`;
+
+            // --- Data Structure (Hardcoded based on research.md) ---
+            const concepts = [
+                {
+                    title: "System 1 vs. System 2: Two Modes of Thought",
+                    description: `Kahneman presents the mind as having <em>two systems</em> of thinking:<ul><li><strong>System 1</strong> is fast, automatic, and intuitive. It operates effortlessly and impulsively.</li><li><strong>System 2</strong> is slow, effortful, and deliberate. It engages for complex problems or unfamiliar situations.</li></ul><p>These two systems constantly interact. System 1 generates impressions and feelings that System 2 may endorse into beliefs or decisions.</p>`,
+                    takeaways: [
+                        "<strong>Balance intuition and analysis:</strong> Use intuition for routine decisions, but engage deeper analysis for high-stakes choices.",
+                        "<strong>Slow down for complex problems:</strong> Pause and think slowly when a decision is important.",
+                        "<strong>Train your \"fast\" thinking:</strong> Sharpen System 1 instincts through experience, but double-check them with data.",
+                        "<strong>Create decision checkpoints:</strong> Force deliberate review of critical decisions."
+                    ]
+                },
+                {
+                    title: "Attention and Effort: The Mental Energy Budget",
+                    description: "Focusing attention is mentally taxing. System 2 has a limited \"budget\" of mental energy. When attention is maxed out, we become prone to mistakes.",
+                    takeaways: [
+                        "<strong>Prioritize important thinking tasks:</strong> Schedule strategy and analysis work when minds are fresh.",
+                        "<strong>Minimize distractions:</strong> Create focused environments for complex discussions.",
+                        "<strong>Allow mental breaks:</strong> Respect the need for recovery between heavy tasks.",
+                        "<strong>Don\'t overload yourself or others:</strong> Protect System 2\'s limited capacity."
+                    ]
+                },
+                 {
+                    title: "The \"Lazy\" Controller: Why We Default to Easy",
+                    description: "System 2 often acts like a lazy controller, letting System 1 dominate unless forced. Thinking hard is work, so we often accept first impressions without scrutiny.",
+                    takeaways: [
+                         "<strong>Don\'t accept the first answer blindly:</strong> Double-check intuitive answers.",
+                         "<strong>Encourage a culture of scrutiny:</strong> Make questioning initial ideas safe and expected.",
+                         "<strong>Provide analytical tools:</strong> Use checklists and frameworks to force deeper thinking.",
+                         "<strong>Be mindful of mental shortcuts:</strong> Watch for overconfidence in fast, comfortable conclusions."
+                     ]
+                 },
+                 {
+                     title: "The Associative Machine: How Ideas Link Together",
+                     description: "System 1 is an associative machine. Ideas, memories, and emotions are linked automatically. This aids creativity but can also mislead through biases and assumptions.",
+                     takeaways: [
+                         "<strong>Harness associative thinking for creativity:</strong> Let ideas flow freely early on, then analyze.",
+                         "<strong>Be aware of unconscious biases:</strong> Check assumptions, especially in hiring and assessments.",
+                         "<strong>Use priming positively:</strong> Start meetings or initiatives with positive cues.",
+                         "<strong>Beware of the stories your mind creates:</strong> Validate stories with facts before acting."
+                     ]
+                 },
+                 {
+                    title: "Cognitive Ease vs. Cognitive Strain: When the Mind Feels Comfortable",
+                     description: "When processing feels easy (cognitive ease), we trust more and question less. Cognitive strain, on the other hand, triggers more vigilance.",
+                     takeaways: [
+                         "<strong>Present information clearly:</strong> Make messages easy to grasp.",
+                         "<strong>Be cautious with comfort:</strong> Verify \"easy\" conclusions carefully.",
+                         "<strong>Leverage repetition wisely:</strong> Reinforce key messages through repetition.",
+                         "<strong>Recognize strain as a signal:</strong> Hard-to-understand issues may require more attention."
+                     ]
+                 },
+                 {
+                     title: "Norms, Surprises, and Causes: Our Automatic Storytelling",
+                     description: "We have mental norms for how things should go. Surprises grab attention, and System 1 pushes us to quickly assign causes—even when events are random.",
+                     takeaways: [
+                         "<strong>Investigate surprises, but verify causes:</strong> Don\'t jump to conclusions.",
+                         "<strong>Don\'t overreact to anomalies:</strong> Avoid changing plans after one-off events.",
+                         "<strong>Encourage open discussion of the unexpected:</strong> Analyze surprises together without blame.",
+                         "<strong>Be mindful of hindsight stories:</strong> Recognize the human tendency to create neat but false narratives."
+                     ]
+                 },
+                 {
+                     title: "Jumping to Conclusions (WYSIATI): *What You See Is All There Is*",
+                     description: "System 1 jumps to conclusions based on limited information, acting as if no missing data exists.",
+                     takeaways: [
+                         "<strong>Always seek more information:</strong> Ask \"What am I missing?\"",
+                         "<strong>Counteract first impressions:</strong> Challenge early conclusions systematically.",
+                         "<strong>Use data and evidence to fill the gaps:</strong> Don\'t rely on single points of information.",
+                         "<strong>Mind the confidence:</strong> Overconfidence often follows incomplete views."
+                     ]
+                 },
+                 {
+                     title: "How Judgments Happen: From Impressions to Beliefs",
+                     description: "Judgments often start with quick impressions, which System 2 may refine but rarely override completely.",
+                     takeaways: [
+                         "<strong>Be mindful of snap judgments:</strong> Verify first impressions with objective checks.",
+                         "<strong>Separate observation from evaluation:</strong> Distinguish what you observe from what you conclude.",
+                         "<strong>Train for objective criteria:</strong> Anchor decisions to clear, agreed-upon standards.",
+                         "<strong>Foster diversity to challenge views:</strong> Diverse teams help correct biased impressions."
+                     ]
+                 },
+                 {
+                     title: "Answering an Easier Question: Mental Shortcuts in Action",
+                     description: "When faced with hard questions, we unconsciously answer easier ones without realizing it.",
+                     takeaways: [
+                         "<strong>Identify the real question:</strong> Ensure the decision addresses the true problem.",
+                         "<strong>Break down complex issues:</strong> Simplify carefully without sidestepping.",
+                         "<strong>Watch for mood and feelings:</strong> Emotional states can bias decision-making.",
+                         "<strong>Encourage deliberate analysis in your team:</strong> Make team members explain their logic to avoid quick, easy answers."
+                     ]
+                 }
+            ];
+
+            // --- Populate Main Concepts HTML ---
+            populateConcepts();
+
+            // --- QUOTES GALLERY --- //
+            const quotesGalleryContainer = document.getElementById('quotes-gallery');
+
+            // Directly structured quotes data
+            const quotesData = {
+                mainTitle: "Wisdom from the Pages",
+                categories: [
+                    {
+                        title: "Core Concept – System 1 vs System 2",
+                        quotes: [
+                            "The mental work that produces impressions, intuitions, and many decisions goes on in silence in our mind.",
+                            "Part 1 presents the basic elements of a two-systems approach to judgment and choice…",
+                            "System 2 is in charge of self-control.",
+                            "System 1 is impulsive and intuitive; System 2 is capable of reasoning, and it is cautious, but at least for some people it is also lazy.",
+                            "Biases cannot always be avoided, because System 2 may have no clue to the error.",
+                            "His System 1 constructed a story, and his System 2 believed it. It happens to all of us."
+                        ]
+                    },
+                    {
+                        title: "Heuristics & Biases",
+                        quotes: [
+                            "Judgment heuristics are quite useful, but sometimes lead to severe and systematic errors.",
+                            "Affect heuristic, where judgments and decisions are guided directly by feelings of liking and disliking, with little deliberation or reasoning.",
+                            "Intuitive heuristics: when faced with a difficult question, we often answer an easier one instead, usually without noticing the substitution.",
+                            "People tend to assess the relative importance of issues by the ease with which they are retrieved from memory … largely determined by the extent of coverage in the media."
+                        ]
+                    },
+                    {
+                        title: "Attention, Self-Control & Ego Depletion",
+                        quotes: [
+                            "You dispose of a limited budget of attention… if you try to go beyond your budget, you will fail.",
+                            "Controlling thoughts and behaviors is one of the tasks that System 2 performs.",
+                            "The phenomenon has been named ego depletion…",
+                            "Activities that impose high demands on System 2 require self-control, and the exertion of self-control is depleting and unpleasant.",
+                            "Laziness is built deep into our nature.",
+                            "You will perform less well, or not at all, if you are not ready or if your attention is directed inappropriately.",
+                            "Task-Switching Cost: One of the significant discoveries of cognitive psychologists in recent decades is that switching from one task to another is effortful, especially under time pressure.",
+                            "Flow: A state of effortless concentration so deep that they lose their sense of time, of themselves, of their problems.",
+                            "Parole Board Study: The proportion spikes after each meal, when about 65 % of requests are granted."
+                        ]
+                    },
+                    {
+                        title: "Communication & Perception",
+                        quotes: [
+                            "We can be blind to the obvious, and we are also blind to our blindness.",
+                            "If you use color, you are more likely to be believed if your text is printed in bright blue or red than in middling shades of green, yellow, or pale blue.",
+                            "Couching familiar ideas in pretentious language is taken as a sign of poor intelligence and low credibility.",
+                            "Aphorisms were judged more insightful when they rhymed than when they did not."
+                        ]
+                    },
+                    {
+                        title: "Jumping to Conclusions & Halo Effect",
+                        quotes: [
+                            "Jumping to conclusions is efficient if the conclusions are likely to be correct…",
+                            "Jumping to conclusions is risky when the situation is unfamiliar, the stakes are high, and there is no time to collect more information.",
+                            "The tendency to like (or dislike) everything about a person—including things you have not observed—is known as the halo effect.",
+                            "Sequence matters … the halo effect increases the weight of first impressions.",
+                            "She knows nothing about this person's management skills. All she is going by is the halo effect from a good presentation."
+                        ]
+                    },
+                    {
+                        title: "Group & Decision Dynamics",
+                        quotes: [
+                            "A simple rule can help: before an issue is discussed, all members of the committee should write a very brief summary of their position.",
+                            "The standard practice of open discussion gives too much weight to the opinions of those who speak early and assertively, causing others to line up behind them."
+                        ]
+                    },
+                    {
+                        title: "Priming & Emotion",
+                        quotes: [
+                            "Your actions and your emotions can be primed by events of which you are not even aware.",
+                            "The idea of money primes individualism … living in a culture that surrounds us with reminders of money may shape our behavior and our attitudes in ways that we do not know about.",
+                            "When you feel strained … you are less intuitive and less creative than usual.",
+                            "Mood evidently affects the operation of System 1: when we are uncomfortable and unhappy, we lose touch with our intuition.",
+                            "I'm in a very good mood today, and my System 2 is weaker than usual. I should be extra careful.",
+                            "Embodied Cognition: As cognitive scientists have emphasized in recent years, cognition is embodied; you think with your body, not only with your brain.",
+                            "Associative Links: Being amused tends to make you smile, and smiling tends to make you feel amused."
+                        ]
+                    },
+                    {
+                        title: "Miscellaneous Gems",
+                        quotes: [
+                            "Intelligence is not only the ability to reason; it is also the ability to find relevant material in memory and to deploy attention when needed.",
+                            "Those who avoid the sin of intellectual sloth could be called 'engaged.'",
+                            "He didn't bother to check whether what he said made sense. Does he usually have a lazy System 2 or was he unusually tired?",
+                            "Whether you state them or not, you often have answers to questions that you do not completely understand…",
+                            "WYSIATI – what you see is all there is.",
+                            "Do we still remember the question we are trying to answer?"
+                        ]
+                    }
+                ]
+            };
+
+            function populateQuotesGallery() {
+                if (!quotesGalleryContainer) return;
+
+                const { mainTitle, categories } = quotesData; // Use the structured data
+
+                if (mainTitle) {
+                    const galleryTitle = document.createElement('h2');
+                    galleryTitle.textContent = mainTitle; // Use textContent for safety if title is plain text
+                    quotesGalleryContainer.appendChild(galleryTitle);
+                }
+
+                categories.forEach((category, categoryIndex) => {
+                    const categorySection = document.createElement('div');
+                    categorySection.classList.add('quote-category-section');
+                    categorySection.style.setProperty('--animation-order', 7 + categoryIndex); // Stagger animation (base 6 for gallery + 1)
+
+                    let quotesHTML = '';
+                    category.quotes.forEach((quote, quoteIndex) => {
+                        const btnText = `Quote ${quoteIndex + 1}: ${quote.substring(0, 30)}${quote.length > 30 ? '...' : ''}`;
+                        quotesHTML += `
+                            <div class="quote-item-container">
+                                <button class="reveal-quote-btn">${btnText} <span class="quote-arrow arrow">▶</span></button>
+                                <div class="quote-text-content">
+                                    <blockquote>${quote}</blockquote>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    categorySection.innerHTML = `
+                        <h3>${category.title} <span class="arrow">▶</span></h3>
+                        <div class="quote-category-content">
+                            ${quotesHTML}
+                        </div>
+                    `;
+                    quotesGalleryContainer.appendChild(categorySection);
+
+                    // Accordion for Category
+                    const categoryHeader = categorySection.querySelector('h3');
+                    categoryHeader.addEventListener('click', () => {
+                        document.querySelectorAll('.quote-category-section.active').forEach(activeCat => {
+                            if (activeCat !== categorySection) {
+                                activeCat.classList.remove('active');
+                                activeCat.querySelectorAll('.quote-text-content.visible').forEach(qc => qc.classList.remove('visible'));
+                                activeCat.querySelectorAll('.reveal-quote-btn.open').forEach(qb => qb.classList.remove('open'));
+                            }
+                        });
+                        categorySection.classList.toggle('active');
+                    });
+
+                    // Accordion for Individual Quotes within this Category
+                    const quoteItems = categorySection.querySelectorAll('.quote-item-container');
+                    quoteItems.forEach(item => {
+                        const quoteBtn = item.querySelector('.reveal-quote-btn');
+                        const quoteContent = item.querySelector('.quote-text-content');
+                        if (quoteBtn && quoteContent) {
+                            quoteBtn.addEventListener('click', (event) => {
+                                event.stopPropagation();
+                                quoteContent.classList.toggle('visible');
+                                quoteBtn.classList.toggle('open');
+                            });
+                        }
+                    });
+                });
+            }
+            
+            function populateConcepts() {
+                if (!conceptsContainer) return;
+                concepts.forEach((concept, index) => {
+                    const section = document.createElement('div');
+                    section.classList.add('concept-section');
+                    // Stagger animation delay for each section (applies fade-in via CSS)
+                    section.style.setProperty('--animation-order', 4 + index);
+
+                    const takeawaysList = concept.takeaways.map(item => `<li>${item}</li>`).join('');
+
+                    section.innerHTML = `
+                        <h2>${concept.title} <span class="arrow">▶</span></h2>
+                        <div class="concept-content">
+                            <p>${concept.description}</p>
+                            <button class="reveal-takeaways-btn">Reveal Leadership Takeaways</button>
+                            <div class="takeaways-section">
+                                <h3>Leadership Takeaways:</h3>
+                                <ul>
+                                    ${takeawaysList}
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    conceptsContainer.appendChild(section);
+
+                    // --- Accordion Functionality (Outer) ---
+                    const header = section.querySelector('h2');
+                    header.addEventListener('click', () => {
+                        // Close other main sections
+                        document.querySelectorAll('.concept-section.active').forEach(activeSection => {
+                            if (activeSection !== section) {
+                                activeSection.classList.remove('active');
+                                // Also ensure takeaways are hidden if section is closed externally
+                                const innerTakeaways = activeSection.querySelector('.takeaways-section');
+                                const innerBtn = activeSection.querySelector('.reveal-takeaways-btn');
+                                if (innerTakeaways && innerTakeaways.classList.contains('visible')) {
+                                    innerTakeaways.classList.remove('visible');
+                                    innerTakeaways.querySelectorAll('ul li').forEach(item => item.classList.remove('item-visible'));
+                                    if (innerBtn) innerBtn.textContent = 'Reveal Leadership Takeaways';
+                                }
+                            }
+                        });
+                        // Toggle current section
+                        section.classList.toggle('active');
+                    });
+
+                    // --- Takeaways Reveal Functionality (Inner) ---
+                    const revealBtn = section.querySelector('.reveal-takeaways-btn');
+                    const takeawaysContent = section.querySelector('.takeaways-section');
+
+                    if (revealBtn && takeawaysContent) {
+                        revealBtn.addEventListener('click', (event) => {
+                            event.stopPropagation(); // Prevent accordion from closing
+                            takeawaysContent.classList.toggle('visible');
+                            const listItems = takeawaysContent.querySelectorAll('ul li');
+
+                            // Change button text and handle list item animation
+                            if (takeawaysContent.classList.contains('visible')) {
+                                revealBtn.textContent = 'Hide Leadership Takeaways';
+                                // Stagger animation for list items
+                                listItems.forEach((item, index) => {
+                                    // Reset state before applying animation class
+                                    item.classList.remove('item-visible');
+                                    // Use requestAnimationFrame for potentially smoother start
+                                    requestAnimationFrame(() => {
+                                        setTimeout(() => {
+                                            item.classList.add('item-visible');
+                                        }, index * 120); // Slightly slower delay: 120ms
+                                    });
+                                });
+                            } else {
+                                revealBtn.textContent = 'Reveal Leadership Takeaways';
+                                // Remove visibility class immediately when hiding
+                                listItems.forEach(item => {
+                                    item.classList.remove('item-visible');
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Initialize both sections
+            populateConcepts();
+            populateQuotesGallery();
+
+        });
+    </script>
+</body>
+</html> 
