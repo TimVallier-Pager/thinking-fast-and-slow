@@ -325,144 +325,6 @@
              animation: fadeIn 0.6s ease-out;
         }
 
-        /* --- Quotes Gallery Specific Styles --- */
-        #quotes-gallery h2 {
-            text-align: center;
-            color: var(--color-accent);
-            font-size: 2.2em;
-            margin-bottom: 1.5em;
-            border-bottom: 1px solid var(--color-secondary);
-            padding-bottom: 0.5em;
-            text-shadow: 0 0 8px var(--color-accent), 0 0 15px rgba(248, 248, 64, 0.6);
-        }
-
-        .quote-category-section {
-            margin-bottom: 1.5em;
-            border: 1px solid rgba(255, 0, 255, 0.3); /* Magenta border */
-            background-color: rgba(25, 15, 30, 0.75); /* Dark magenta-tinted bg */
-            padding: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-
-        .quote-category-section:hover {
-            background-color: rgba(35, 25, 45, 0.85);
-            border-color: var(--color-secondary);
-        }
-
-        .quote-category-section h3 {
-            font-family: var(--font-heading);
-            color: var(--color-secondary);
-            text-shadow: 0 0 4px var(--color-secondary);
-            font-size: 1.5em;
-            margin: 0;
-            padding-bottom: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: none;
-        }
-
-        .quote-category-section:hover h3 {
-            color: var(--color-accent);
-            text-shadow: 0 0 5px var(--color-accent);
-        }
-
-        .quote-category-section .arrow {
-             color: var(--color-primary); /* Cyan arrow */
-        }
-        .quote-category-section:hover .arrow {
-            color: var(--color-accent);
-        }
-
-        .quote-category-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), margin-top 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-            margin-top: 0;
-            opacity: 0;
-        }
-
-        .quote-category-section.active .quote-category-content {
-            max-height: 2000px; /* Generous height for multiple quotes */
-            margin-top: 1em;
-            opacity: 1;
-            transition: max-height 0.7s cubic-bezier(0.5, 0, 0.5, 1), margin-top 0.7s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.5s ease-in 0.2s;
-        }
-
-        .quote-item-container {
-            margin-bottom: 1em;
-            padding: 10px;
-            border: 1px dashed rgba(0, 246, 255, 0.2);
-            background-color: rgba(8, 10, 15, 0.5);
-            transition: transform 0.2s ease-out;
-        }
-
-        .reveal-quote-btn {
-            display: block; /* Make it full width for easier clicking */
-            width: 100%;
-            background-color: transparent;
-            color: var(--color-primary);
-            padding: 8px 12px;
-            border: 1px solid var(--color-primary);
-            font-family: var(--font-body);
-            font-size: 0.95em;
-            text-align: left;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease, letter-spacing 0.3s ease;
-            letter-spacing: 1px;
-        }
-
-        .reveal-quote-btn:hover {
-            background-color: var(--color-primary);
-            color: var(--color-background);
-            letter-spacing: 2px;
-            text-shadow: none;
-        }
-
-        .reveal-quote-btn .quote-arrow {
-            float: right;
-            transform: rotate(0deg);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        }
-
-        .reveal-quote-btn.open .quote-arrow {
-            transform: rotate(90deg);
-        }
-
-        .quote-text-content {
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: max-height 0.5s ease-out, opacity 0.4s ease-out, margin-top 0.5s ease-out, padding-top 0.5s ease-out;
-            margin-top: 0;
-            padding-top: 0;
-        }
-
-        .quote-text-content.visible {
-            max-height: 500px; /* Adjust if quotes are very long */
-            opacity: 1;
-            margin-top: 0.8em;
-            padding-top: 0.8em;
-            border-top: 1px dotted rgba(0, 246, 255, 0.3);
-        }
-
-        .quote-text-content blockquote {
-            margin: 0;
-            padding: 0.5em 0;
-            font-style: italic;
-            color: var(--color-text);
-            text-shadow: 0 0 2px rgba(208, 216, 232, 0.5);
-        }
-
-        .quote-text-content blockquote::before,
-        .quote-text-content blockquote::after {
-            content: '"';
-            color: var(--color-accent);
-            font-size: 1.2em;
-            margin: 0 2px;
-        }
-
     </style>
 </head>
 <body>
@@ -482,12 +344,6 @@
         </section>
 
         <hr style="--animation-order: 5;">
-
-        <section id="quotes-gallery" style="--animation-order: 6;">
-            <!-- Quotes will be dynamically injected here by JavaScript -->
-        </section>
-
-        <hr style="--animation-order: 7;">
 
         <section id="final-thoughts" style="--animation-order: 8;">
              <h2>Final Thoughts</h2>
@@ -569,7 +425,7 @@
                  },
                  {
                      title: "Jumping to Conclusions (WYSIATI): *What You See Is All There Is*",
-                     description: "System 1 jumps to conclusions based on limited information, acting as if no missing data exists.",
+                     description: "When faced with hard questions, we unconsciously answer easier ones without realizing it.",
                      takeaways: [
                          "<strong>Always seek more information:</strong> Ask \"What am I missing?\"",
                          "<strong>Counteract first impressions:</strong> Challenge early conclusions systematically.",
@@ -602,165 +458,6 @@
             // --- Populate Main Concepts HTML ---
             populateConcepts();
 
-            // --- QUOTES GALLERY --- //
-            const quotesGalleryContainer = document.getElementById('quotes-gallery');
-
-            // Directly structured quotes data
-            const quotesData = {
-                mainTitle: "Wisdom from the Pages",
-                categories: [
-                    {
-                        title: "Core Concept – System 1 vs System 2",
-                        quotes: [
-                            "The mental work that produces impressions, intuitions, and many decisions goes on in silence in our mind.",
-                            "Part 1 presents the basic elements of a two-systems approach to judgment and choice…",
-                            "System 2 is in charge of self-control.",
-                            "System 1 is impulsive and intuitive; System 2 is capable of reasoning, and it is cautious, but at least for some people it is also lazy.",
-                            "Biases cannot always be avoided, because System 2 may have no clue to the error.",
-                            "His System 1 constructed a story, and his System 2 believed it. It happens to all of us."
-                        ]
-                    },
-                    {
-                        title: "Heuristics & Biases",
-                        quotes: [
-                            "Judgment heuristics are quite useful, but sometimes lead to severe and systematic errors.",
-                            "Affect heuristic, where judgments and decisions are guided directly by feelings of liking and disliking, with little deliberation or reasoning.",
-                            "Intuitive heuristics: when faced with a difficult question, we often answer an easier one instead, usually without noticing the substitution.",
-                            "People tend to assess the relative importance of issues by the ease with which they are retrieved from memory … largely determined by the extent of coverage in the media."
-                        ]
-                    },
-                    {
-                        title: "Attention, Self-Control & Ego Depletion",
-                        quotes: [
-                            "You dispose of a limited budget of attention… if you try to go beyond your budget, you will fail.",
-                            "Controlling thoughts and behaviors is one of the tasks that System 2 performs.",
-                            "The phenomenon has been named ego depletion…",
-                            "Activities that impose high demands on System 2 require self-control, and the exertion of self-control is depleting and unpleasant.",
-                            "Laziness is built deep into our nature.",
-                            "You will perform less well, or not at all, if you are not ready or if your attention is directed inappropriately.",
-                            "Task-Switching Cost: One of the significant discoveries of cognitive psychologists in recent decades is that switching from one task to another is effortful, especially under time pressure.",
-                            "Flow: A state of effortless concentration so deep that they lose their sense of time, of themselves, of their problems.",
-                            "Parole Board Study: The proportion spikes after each meal, when about 65 % of requests are granted."
-                        ]
-                    },
-                    {
-                        title: "Communication & Perception",
-                        quotes: [
-                            "We can be blind to the obvious, and we are also blind to our blindness.",
-                            "If you use color, you are more likely to be believed if your text is printed in bright blue or red than in middling shades of green, yellow, or pale blue.",
-                            "Couching familiar ideas in pretentious language is taken as a sign of poor intelligence and low credibility.",
-                            "Aphorisms were judged more insightful when they rhymed than when they did not."
-                        ]
-                    },
-                    {
-                        title: "Jumping to Conclusions & Halo Effect",
-                        quotes: [
-                            "Jumping to conclusions is efficient if the conclusions are likely to be correct…",
-                            "Jumping to conclusions is risky when the situation is unfamiliar, the stakes are high, and there is no time to collect more information.",
-                            "The tendency to like (or dislike) everything about a person—including things you have not observed—is known as the halo effect.",
-                            "Sequence matters … the halo effect increases the weight of first impressions.",
-                            "She knows nothing about this person's management skills. All she is going by is the halo effect from a good presentation."
-                        ]
-                    },
-                    {
-                        title: "Group & Decision Dynamics",
-                        quotes: [
-                            "A simple rule can help: before an issue is discussed, all members of the committee should write a very brief summary of their position.",
-                            "The standard practice of open discussion gives too much weight to the opinions of those who speak early and assertively, causing others to line up behind them."
-                        ]
-                    },
-                    {
-                        title: "Priming & Emotion",
-                        quotes: [
-                            "Your actions and your emotions can be primed by events of which you are not even aware.",
-                            "The idea of money primes individualism … living in a culture that surrounds us with reminders of money may shape our behavior and our attitudes in ways that we do not know about.",
-                            "When you feel strained … you are less intuitive and less creative than usual.",
-                            "Mood evidently affects the operation of System 1: when we are uncomfortable and unhappy, we lose touch with our intuition.",
-                            "I'm in a very good mood today, and my System 2 is weaker than usual. I should be extra careful.",
-                            "Embodied Cognition: As cognitive scientists have emphasized in recent years, cognition is embodied; you think with your body, not only with your brain.",
-                            "Associative Links: Being amused tends to make you smile, and smiling tends to make you feel amused."
-                        ]
-                    },
-                    {
-                        title: "Miscellaneous Gems",
-                        quotes: [
-                            "Intelligence is not only the ability to reason; it is also the ability to find relevant material in memory and to deploy attention when needed.",
-                            "Those who avoid the sin of intellectual sloth could be called 'engaged.'",
-                            "He didn't bother to check whether what he said made sense. Does he usually have a lazy System 2 or was he unusually tired?",
-                            "Whether you state them or not, you often have answers to questions that you do not completely understand…",
-                            "WYSIATI – what you see is all there is.",
-                            "Do we still remember the question we are trying to answer?"
-                        ]
-                    }
-                ]
-            };
-
-            function populateQuotesGallery() {
-                if (!quotesGalleryContainer) return;
-
-                const { mainTitle, categories } = quotesData; // Use the structured data
-
-                if (mainTitle) {
-                    const galleryTitle = document.createElement('h2');
-                    galleryTitle.textContent = mainTitle; // Use textContent for safety if title is plain text
-                    quotesGalleryContainer.appendChild(galleryTitle);
-                }
-
-                categories.forEach((category, categoryIndex) => {
-                    const categorySection = document.createElement('div');
-                    categorySection.classList.add('quote-category-section');
-                    categorySection.style.setProperty('--animation-order', 7 + categoryIndex); // Stagger animation (base 6 for gallery + 1)
-
-                    let quotesHTML = '';
-                    category.quotes.forEach((quote, quoteIndex) => {
-                        const btnText = `Quote ${quoteIndex + 1}: ${quote.substring(0, 30)}${quote.length > 30 ? '...' : ''}`;
-                        quotesHTML += `
-                            <div class="quote-item-container">
-                                <button class="reveal-quote-btn">${btnText} <span class="quote-arrow arrow">▶</span></button>
-                                <div class="quote-text-content">
-                                    <blockquote>${quote}</blockquote>
-                                </div>
-                            </div>
-                        `;
-                    });
-
-                    categorySection.innerHTML = `
-                        <h3>${category.title} <span class="arrow">▶</span></h3>
-                        <div class="quote-category-content">
-                            ${quotesHTML}
-                        </div>
-                    `;
-                    quotesGalleryContainer.appendChild(categorySection);
-
-                    // Accordion for Category
-                    const categoryHeader = categorySection.querySelector('h3');
-                    categoryHeader.addEventListener('click', () => {
-                        document.querySelectorAll('.quote-category-section.active').forEach(activeCat => {
-                            if (activeCat !== categorySection) {
-                                activeCat.classList.remove('active');
-                                activeCat.querySelectorAll('.quote-text-content.visible').forEach(qc => qc.classList.remove('visible'));
-                                activeCat.querySelectorAll('.reveal-quote-btn.open').forEach(qb => qb.classList.remove('open'));
-                            }
-                        });
-                        categorySection.classList.toggle('active');
-                    });
-
-                    // Accordion for Individual Quotes within this Category
-                    const quoteItems = categorySection.querySelectorAll('.quote-item-container');
-                    quoteItems.forEach(item => {
-                        const quoteBtn = item.querySelector('.reveal-quote-btn');
-                        const quoteContent = item.querySelector('.quote-text-content');
-                        if (quoteBtn && quoteContent) {
-                            quoteBtn.addEventListener('click', (event) => {
-                                event.stopPropagation();
-                                quoteContent.classList.toggle('visible');
-                                quoteBtn.classList.toggle('open');
-                            });
-                        }
-                    });
-                });
-            }
-            
             function populateConcepts() {
                 if (!conceptsContainer) return;
                 conceptsContainer.innerHTML = ''; // Clear any existing content
@@ -847,9 +544,8 @@
 
             // Initialize both sections
             populateConcepts();
-            populateQuotesGallery();
 
         });
     </script>
 </body>
-</html> 
+</html>
